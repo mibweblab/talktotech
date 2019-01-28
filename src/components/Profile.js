@@ -9,12 +9,12 @@ export default class Profile extends Component {
       case false:
         return (
           <li>
-            <a href="/auth/google">Login with Google</a>
+            <a href="/auth/google">Login with Google BYE</a>
           </li>
         );
       default:
         return (
-          <div class="row">
+          <div className="row">
             <ul id="nav-mobile" className="right hide-on-med-down">
               <li>
                 {/* <a href="/profile">{this.props.auth.displayName}</a> */}
@@ -33,9 +33,9 @@ export default class Profile extends Component {
                 </div>
                 <div className="card-content" style={{ color: 'black' }}>
                   <p>
-                    I am a very simple card. I am good at containing small bits
-                    of information. I am convenient because I require little
-                    markup to use effectively.
+                    Hillary am a very simple card. I am good at containing small
+                    bits of information. I am convenient because I require
+                    little markup to use effectively.
                   </p>
                 </div>
                 <div className="card-action">

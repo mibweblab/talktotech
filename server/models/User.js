@@ -10,3 +10,4 @@ const userSchema = new Schema({
 });
 
 mongoose.model('users', userSchema); //tell mongoose that there is a collection that needs to be created with users
+// module.exports = mongoose.model('User', userSchema);

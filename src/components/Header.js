@@ -4,8 +4,15 @@ import { connect } from 'react-redux';
 import Dashboard from './Dashboard';
 import { Route } from 'react-router-dom';
 import Profile from './Profile';
+import { Link } from 'react-router-dom';
+import EmergencyForm from './EmergencyForm';
+// import Popup from 'reactjs-popup';
 
 class Header extends Component {
+  // renderEmergency() {
+  //   return <EmergencyForm />;
+  // }
+
   renderContent() {
     switch (this.props.auth) {
       case null:
@@ -17,16 +24,17 @@ class Header extends Component {
           </li>
         );
       default:
-        return (
+        return [
           <ul id="nav-mobile" className="right hide-on-med-down">
             <li>
               <a href="/profile">{this.props.auth.displayName}</a>
             </li>
+
             <li>
               <a href="/api/logout">Logout</a>
             </li>
           </ul>
-        );
+        ];
     }
   }
   render() {
@@ -34,13 +42,16 @@ class Header extends Component {
     return (
       <nav>
         <div className="nav-wrapper">
-          <a path="/" className="left brand-logo">
+          <Link
+            to={this.props.auth ? '/dashboard' : '/'}
+            className="left brand-logo"
+          >
             TecHelp
-          </a>
+          </Link>
           <ul className="right">{this.renderContent()}</ul>
         </div>
-        <Route path="/dashboard" component={Dashboard} />
-        <Route component={Profile} />
+        {/* <Route path="/dashboard" component={Dashboard} />
+        <Route component={Profile} /> */}
       </nav>
     );
   }
