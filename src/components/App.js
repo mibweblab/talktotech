@@ -1,6 +1,18 @@
 import React, { Component } from 'react';
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
+import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
+import {
+  Card,
+  Button,
+  CardTitle,
+  CardText,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  FormText
+} from 'reactstrap';
+
 import './App.css';
 
 var myIcon = L.icon({
@@ -18,7 +30,11 @@ export default class Dashboard extends Component {
       lng: -71.093966
     },
     haveUserLocation: false,
-    zoom: 2
+    zoom: 2,
+    userMessage: {
+      name: '',
+      message: ''
+    }
   };
 
   componentDidMount() {
@@ -52,24 +68,73 @@ export default class Dashboard extends Component {
       }
     );
   }
+  formSubmitted = event => {
+    event.preventDefault();
+    console.log(this.state.userMessage);
+  };
+  valueChanged = event => {
+    const { name, value } = event.target;
+    this.setState(prevState => ({
+      userMessage: {
+        ...prevState.userMessage,
+        [name]: value
+      }
+    }));
+  };
   render() {
     const position = [this.state.location.lat, this.state.location.lng];
     return (
-      <Map className="map" center={position} zoom={this.state.zoom}>
-        <TileLayer
-          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {this.state.haveUserLocation ? (
-          <Marker position={position} icon={myIcon}>
-            <Popup>
-              A pretty CSS3 popup. <br /> Easily customizable.
-            </Popup>
-          </Marker>
-        ) : (
-          ''
-        )}
-      </Map>
+      <div className="map">
+        <Map className="map" center={position} zoom={this.state.zoom}>
+          <TileLayer
+            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {this.state.haveUserLocation ? (
+            <Marker position={position} icon={myIcon}>
+              <Popup>
+                A pretty CSS3 popup. <br /> Easily customizable.
+              </Popup>
+            </Marker>
+          ) : (
+            ''
+          )}
+          <Card body className="message-form">
+            <CardTitle>Welcome to TellATech</CardTitle>
+            <CardText>Leave a comment with your location</CardText>
+            <CardText>Thanks for stoping by</CardText>
+            <Form onSubmit={this.formSubmitted}>
+              <FormGroup>
+                <Label for="name">Name</Label>
+                <Input
+                  onChange={this.valueChanged}
+                  type="text"
+                  name="name"
+                  id="name"
+                  placeholder="Enter your name "
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="message">Message</Label>
+                <Input
+                  onChange={this.valueChanged}
+                  type="textarea"
+                  name="message"
+                  id="message"
+                  placeholder="Enter a message "
+                />
+              </FormGroup>
+              <Button
+                type="submit"
+                color="info"
+                disabled={this.haveUserLocation}
+              >
+                Send
+              </Button>{' '}
+            </Form>
+          </Card>
+        </Map>
+      </div>
     );
   }
 }

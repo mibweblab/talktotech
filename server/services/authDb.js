@@ -2,7 +2,7 @@ const MongoClient = require('mongodb').MongoClient;
 const keys = require('../config/key');
 
 // set up mongoDB connection
-// Example URI ---> mongodb+srv://weblab:6jYctMizX5Y5ie6W@catbook-fsjig.mongodb.net?retryWrites=true
+
 // const mongoURL = keys.mongoURI;
 
 const client = new MongoClient(keys.mongoURI, { useNewUrlParser: true });
