@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const pino = require('express-pino-logger')();
+// const cors = require('cors')();
 
 require('dotenv').config();
 
@@ -11,6 +12,8 @@ const api = require('./api');
 const app = express();
 
 app.use(pino);
+
+// app.use(cors());
 
 app.use(morgan('dev'));
 app.use(helmet());

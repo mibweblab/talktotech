@@ -11,6 +11,7 @@ import {
   FormGroup,
   Label,
   Input,
+  Spinner,
   FormText
 } from 'reactstrap';
 
@@ -51,10 +52,19 @@ export default class Dashboard extends Component {
     userMessage: {
       name: '',
       message: ''
-    }
+    },
+    sendingMessage: false,
+    sentMessage: false,
+    spinner: false,
+    messages: []
   };
 
   componentDidMount() {
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(messages => {
+        this.setState({ messages });
+      });
     navigator.geolocation.getCurrentPosition(
       position => {
         console.log(position);
@@ -98,6 +108,10 @@ export default class Dashboard extends Component {
     console.log(this.state.userMessage);
 
     if (this.formIsValid()) {
+      //before we start to submit
+      this.setState({
+        sendingMessage: true
+      });
       fetch(API_URL, {
         method: 'POST',
         headers: {
@@ -113,6 +127,9 @@ export default class Dashboard extends Component {
         .then(res => res.json())
         .then(message => {
           console.log(message);
+          setTimeout(() => {
+            this.setState({ sendingMessage: false, sentMessage: true });
+          }, 4000);
         });
     }
   };
@@ -136,44 +153,77 @@ export default class Dashboard extends Component {
           />
           {this.state.haveUserLocation ? (
             <Marker position={position} icon={myIcon}>
-              <Popup>
-                A pretty popup. <br /> Where users will add their message.
-              </Popup>
+              <Popup>This is you!</Popup>
             </Marker>
           ) : (
             ''
           )}
+          {this.state.messages.map(message => {
+            return (
+              <Marker
+                position={[message.latitude, message.longitude]}
+                icon={myIcon}
+              >
+                <Popup>
+                  <em>{message.name}: </em> {message.message}
+                </Popup>
+              </Marker>
+            );
+          })}
           <Card body className="message-form">
-            <CardTitle>Welcome to TellATech</CardTitle>
+            <CardTitle className="tellr">Tellr</CardTitle>
             <CardText>Leave a comment with your location</CardText>
-            <CardText>Thanks for stoping by</CardText>
-            <Form onSubmit={this.formSubmitted}>
-              <FormGroup>
-                <Label for="name">Name</Label>
-                <Input
-                  disabled={!this.state.haveUserLocation}
-                  onChange={this.valueChanged}
-                  type="text"
-                  name="name"
-                  id="name"
-                  placeholder="Enter your name "
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="message">Message</Label>
-                <Input
-                  disabled={!this.state.haveUserLocation}
-                  onChange={this.valueChanged}
-                  type="textarea"
-                  name="message"
-                  id="message"
-                  placeholder="Enter a message "
-                />
-              </FormGroup>
-              <Button type="submit" color="info" disabled={!this.formIsValid()}>
-                Send
-              </Button>{' '}
-            </Form>
+
+            {!this.state.sendingMessage &&
+            !this.state.sentMessage &&
+            this.state.haveUserLocation ? (
+              <Form onSubmit={this.formSubmitted}>
+                <FormGroup>
+                  <Label for="name">Name</Label>
+                  <Input
+                    disabled={!this.state.haveUserLocation}
+                    onChange={this.valueChanged}
+                    type="text"
+                    name="name"
+                    id="name"
+                    placeholder="Enter your name "
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label for="message">Message</Label>
+                  <Input
+                    disabled={!this.state.haveUserLocation}
+                    onChange={this.valueChanged}
+                    type="textarea"
+                    name="message"
+                    id="message"
+                    placeholder="Enter a message "
+                  />
+                </FormGroup>
+                <Button
+                  type="submit"
+                  color="info"
+                  disabled={!this.formIsValid()}
+                >
+                  Send
+                </Button>{' '}
+              </Form>
+            ) : this.state.sendingMessage || !this.state.haveUserLocation ? (
+              <span>
+                <Spinner type="grow" color="primary" />
+                <Spinner type="grow" color="secondary" />
+                <Spinner type="grow" color="success" />
+                <Spinner type="grow" color="info" />
+                <Spinner type="grow" color="primary" />
+                <Spinner type="grow" color="dark" />
+              </span>
+            ) : (
+              <CardText>
+                <Spinner type="grow" color="success" />
+                Thanks for submitting a message!
+                <Spinner type="grow" color="success" />
+              </CardText>
+            )}
           </Card>
         </Map>
       </div>
