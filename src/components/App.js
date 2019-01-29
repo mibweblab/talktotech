@@ -180,7 +180,7 @@ export default class Dashboard extends Component {
           })}
           <Card body className="message-form">
             <CardTitle className="tellr">Tellr</CardTitle>
-            <CardText>Leave a comment with your location</CardText>
+            <CardText>Leave a comment with your location.</CardText>
 
             {!this.state.sendingMessage &&
             !this.state.sentMessage &&
